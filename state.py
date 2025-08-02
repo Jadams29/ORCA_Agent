@@ -39,7 +39,7 @@ class ScoredCriterion(BaseModel):
 
 class EvaluationResult(BaseModel):
     """The full evaluation result for a prompt candidate."""
-    results: List
+    results: List[ScoredCriterion]
 
 
 class FinalReport(BaseModel):

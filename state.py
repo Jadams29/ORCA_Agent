@@ -1,6 +1,7 @@
 from typing import List, Dict, Literal, Optional
+import json
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from typing_extensions import TypedDict
 
 
@@ -48,6 +49,15 @@ class FinalReport(BaseModel):
     executive_summary: str = Field(description="A brief summary of the key improvements.")
     detailed_rationale: Dict[str, str] = Field(
         description="A dictionary mapping criterion ID to a detailed justification of the improvement.")
+    
+    @validator('detailed_rationale', pre=True)
+    def parse_detailed_rationale(cls, v):
+        if isinstance(v, str):
+            try:
+                return json.loads(v)
+            except json.JSONDecodeError:
+                raise ValueError("detailed_rationale must be a valid JSON string or dictionary")
+        return v
 
 
 class AgentState(TypedDict):
